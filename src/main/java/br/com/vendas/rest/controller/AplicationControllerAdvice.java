@@ -1,9 +1,6 @@
 package br.com.vendas.rest.controller;
 
-import br.com.vendas.Exeption.ClienteNaoEncontradoExeption;
-import br.com.vendas.Exeption.PedidoNaoEncontradoException;
-import br.com.vendas.Exeption.ProdutoNaoEncontradoException;
-import br.com.vendas.Exeption.RegraNegocioExeption;
+import br.com.vendas.Exeption.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,6 +45,13 @@ public class AplicationControllerAdvice {
     @ExceptionHandler(ProdutoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiErrors handleProdutoNotFoundException(ProdutoNaoEncontradoException ex) {
+        String mensagemErro = ex.getMessage();
+        return new ApiErrors(mensagemErro);
+    }
+
+    @ExceptionHandler(SenhaInvalidaException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiErrors handleSenhaInvalidaException(SenhaInvalidaException ex){
         String mensagemErro = ex.getMessage();
         return new ApiErrors(mensagemErro);
     }

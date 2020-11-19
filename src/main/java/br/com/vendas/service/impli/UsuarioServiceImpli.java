@@ -1,5 +1,6 @@
 package br.com.vendas.service.impli;
 
+import br.com.vendas.Exeption.SenhaInvalidaException;
 import br.com.vendas.domain.entity.Usuario;
 import br.com.vendas.domain.repository.Usuarios;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,16 @@ public class UsuarioServiceImpli implements UserDetailsService {
     @Transactional
     public Usuario salvar(Usuario usuario){
         return usuariosRepository.save(usuario);
+    }
+
+    public UserDetails autenticar(Usuario usuario){
+        UserDetails user = loadUserByUsername(usuario.getLogin());
+        boolean senhasBatem = encoder.matches(usuario.getSenha(), user.getPassword());
+
+        if (senhasBatem){
+            return user;
+        }
+        throw new SenhaInvalidaException("Senha é invalida");
     }
 
     @Override
